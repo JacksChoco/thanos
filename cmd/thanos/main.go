@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"syscall"
 
 	gmetrics "github.com/armon/go-metrics"
@@ -32,6 +33,10 @@ const (
 type setupFunc func(*run.Group, log.Logger, *prometheus.Registry, opentracing.Tracer, bool) error
 
 func main() {
+	host := strings.Split(os.Getenv("HOSTNAME"), "-")
+	ORDINAL_ID := host[len(host)-1]
+	os.Setenv("ORDINAL_ID", ORDINAL_ID)
+
 	if os.Getenv("DEBUG") != "" {
 		runtime.SetMutexProfileFraction(10)
 		runtime.SetBlockProfileRate(10)
